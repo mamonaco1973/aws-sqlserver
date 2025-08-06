@@ -75,7 +75,6 @@ resource "aws_route_table_association" "public_rta_1" {
 
 # Allocate an Elastic IP for the NAT Gateway
 resource "aws_eip" "nat_eip" {
-  vpc = true
   tags = {
     Name = "nat-eip"
   }
