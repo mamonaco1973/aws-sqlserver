@@ -20,10 +20,11 @@ resource "aws_db_instance" "sqlserver_rds" {
   allocated_storage     = 20 # 20GB is minimum for RDS SQL Server
   max_allocated_storage = 50 # Allow storage auto-scaling
   storage_type          = "gp3"
-  engine                = "sqlserver-se"    # Standard Edition
-  engine_version        = "16.00.4185.3.v1" # Specify the SQL Server version
 
-  instance_class = "db.t3.small" # 2 vCPUs, 2 GiB RAM
+  instance_class = "db.m5.large"
+  engine         = "sqlserver-se"
+  engine_version = "16.00.4185.3.v1"   # SQL Server 2022
+
   license_model  = "license-included"
   username       = "sqladmin"                                # Static username for SQL Server admin
   password       = random_password.sqlserver_password.result # Use the generated password
