@@ -28,7 +28,7 @@ resource "aws_db_instance" "sqlserver_rds" {
   password                = random_password.sqlserver_password.result # Use the generated password
 
   db_subnet_group_name    = aws_db_subnet_group.sqlserver_subnet_group.name
-  vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  vpc_security_group_ids  = [aws_security_group.rds_sg.id] # Use the security group defined earlier
   multi_az                = true                     # High availability
   publicly_accessible     = false                    # Private subnets only
   skip_final_snapshot     = true
