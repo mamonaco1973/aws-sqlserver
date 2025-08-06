@@ -1,5 +1,5 @@
 ############################################
-# SECURITY GROUP: POSTGRESQL ACCESS
+# SECURITY GROUP: SQL SERVER ACCESS
 ############################################
 
 resource "aws_security_group" "rds_sg" {
@@ -9,9 +9,9 @@ resource "aws_security_group" "rds_sg" {
 
   # Ingress Rule — Allow Postgres traffic from anywhere
   ingress {
-    from_port   = 5432          # Starting port — HTTP
-    to_port     = 5432          # Ending port — HTTP
-    protocol    = "tcp"         # TCP protocol required for HTTP
+    from_port   = 1433          # Starting port — SQL Server
+    to_port     = 1433          # Ending port — SQL Server
+    protocol    = "tcp"         # TCP protocol required for SQL Server
     cidr_blocks = ["0.0.0.0/0"] # ⚠️ Open to all IPv4 addresses — not secure for production
   }
 
