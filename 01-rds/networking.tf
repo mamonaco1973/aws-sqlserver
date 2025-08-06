@@ -8,7 +8,7 @@ resource "aws_vpc" "rds-vpc" {
   enable_dns_support   = true          # Enable internal DNS resolution for EC2 instances
   enable_dns_hostnames = true          # Allow EC2 instances to be assigned DNS hostnames
   tags = {
-    Name          = "rds-vpc"    # Name tag for resource identification
+    Name = "rds-vpc" # Name tag for resource identification
   }
 }
 
