@@ -4,8 +4,8 @@
 resource "aws_db_subnet_group" "sqlserver_subnet_group" {
   name       = "sqlserver-subnet-group"
   subnet_ids = [
-    aws_subnet.private_subnet_1.id,
-    aws_subnet.private_subnet_2.id
+    aws_subnet.private-subnet-1.id,
+    aws_subnet.private-subnet-2.id
   ]
   tags = {
     Name = "sqlserver-subnet-group"
