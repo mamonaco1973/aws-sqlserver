@@ -37,9 +37,6 @@ resource "aws_db_instance" "sqlserver_rds" {
   deletion_protection     = false
   backup_retention_period = 7
 
-  # Monitoring
-  monitoring_interval = 60
-
   tags = {
     Name = "sqlserver-rds"
   }
