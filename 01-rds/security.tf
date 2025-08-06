@@ -1,5 +1,5 @@
 ############################################
-# SECURITY GROUP: HTTP (PORT 80)
+# SECURITY GROUP: POSTGRESQL ACCESS
 ############################################
 
 resource "aws_security_group" "rds_sg" {
