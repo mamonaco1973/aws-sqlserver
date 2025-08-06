@@ -69,3 +69,74 @@ resource "aws_route_table_association" "public_rta_1" {
 }
 
 
+############################################
+# NAT GATEWAY CONFIGURATION
+############################################
+
+# Allocate an Elastic IP for the NAT Gateway
+resource "aws_eip" "nat_eip" {
+  vpc = true
+  tags = {
+    Name = "nat-eip"
+  }
+}
+
+# Create the NAT Gateway in the public subnet
+resource "aws_nat_gateway" "rds-nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.rds-subnet-1.id
+  tags = {
+    Name = "rds-nat-gateway"
+  }
+}
+
+############################################
+# PRIVATE SUBNET DEFINITIONS
+############################################
+
+resource "aws_subnet" "private-subnet-1" {
+  vpc_id            = aws_vpc.rds-vpc.id
+  cidr_block        = "10.0.0.64/26"
+  availability_zone = "us-east-2a"
+  tags = {
+    Name = "private-subnet-1"
+  }
+}
+
+resource "aws_subnet" "private-subnet-2" {
+  vpc_id            = aws_vpc.rds-vpc.id
+  cidr_block        = "10.0.0.128/26"
+  availability_zone = "us-east-2b"
+  tags = {
+    Name = "private-subnet-2"
+  }
+}
+
+############################################
+# PRIVATE ROUTE TABLE
+############################################
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.rds-vpc.id
+  tags = {
+    Name = "private-route-table"
+  }
+}
+
+# Default route for outbound internet access through NAT
+resource "aws_route" "private_default_route" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.rds-nat.id
+}
+
+# Associate private route table with both private subnets
+resource "aws_route_table_association" "private_rta_1" {
+  subnet_id      = aws_subnet.private-subnet-1.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_rta_2" {
+  subnet_id      = aws_subnet.private-subnet-2.id
+  route_table_id = aws_route_table.private.id
+}
