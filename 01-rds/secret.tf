@@ -22,7 +22,7 @@ resource "aws_secretsmanager_secret_version" "sqlserver_credentials_version" {
   secret_string = jsonencode({
     user            = "sqladmin"                                # Static username for SQL Server admin
     password        = random_password.sqlserver_password.result # Dynamic, securely generated password
-    endpoint        = split(":", aws_rds_cluster.sqlserver_cluster.endpoint)[0]
+    #endpoint        = split(":", aws_rds_cluster.sqlserver_cluster.endpoint)[0]
   })
 }
 
