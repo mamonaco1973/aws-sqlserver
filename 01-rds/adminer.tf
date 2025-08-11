@@ -49,7 +49,7 @@ resource "aws_instance" "ubuntu_instance" {
 
   user_data = templatefile("./scripts/adminer.sh.template", {
     DBPASSWORD = random_password.sqlserver_password.result # Use generated SQL Server password
-    DBUSER     = "sqladmin "                               # Static username for SQL Server
+    DBUSER     = "sqladmin"                                # Static username for SQL Server
     DBENDPOINT = aws_db_instance.sqlserver_rds.address     # RDS endpoint from the resource above
   })
 
