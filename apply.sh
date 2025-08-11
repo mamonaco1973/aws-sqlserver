@@ -25,7 +25,7 @@ export AWS_DEFAULT_REGION="us-east-2"
 ############################################
 
 # Inform user about infrastructure provisioning step
-echo "NOTE: Building Database Instances."
+echo "NOTE: Building SQL Server Instance."
 
 # Navigate to the infrastructure provisioning folder
 cd 01-rds
