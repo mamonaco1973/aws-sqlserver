@@ -2,7 +2,7 @@
 
 echo "NOTE: Validating that required commands are found in your PATH."
 # List of required commands
-commands=("aws" "psql" "terraform" "jq")
+commands=("aws" "terraform" "jq")
 
 # Flag to track if all commands are found
 all_found=true
