@@ -35,7 +35,7 @@ resource "aws_security_group" "rds_sg" {
 resource "aws_security_group" "web_sg" {
   name        = "web-sg" # Name of the security group
   description = "Allow HTTP (80) and HTTPS (443) inbound; allow all outbound"
-  vpc_id      = aws_vpc.web_vpc.id # Associate SG with your VPC
+  vpc_id      = aws_vpc.rds-vpc.id # Associate SG with the rds VPC
 
   # Ingress Rule — Allow HTTP traffic from anywhere
   ingress {
