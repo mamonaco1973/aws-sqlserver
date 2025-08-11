@@ -47,7 +47,7 @@ resource "aws_instance" "ubuntu_instance" {
   # Attach the IAM instance profile that allows this EC2 to talk to SSM
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm_profile.name
 
-  user_data = templatefile("./scripts/adminer.tf.template", {
+  user_data = templatefile("./scripts/adminer.sh.template", {
     DBPASSWORD = random_password.sqlserver_password.result # Use generated SQL Server password
     DBUSER     = "sqladmin "                               # Static username for SQL Server
     DBENDPOINT = aws_db_instance.sqlserver_rds.address     # RDS endpoint from the resource above
