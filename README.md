@@ -45,7 +45,6 @@ Run [check_env](check_env.sh) then run [apply](apply.sh).
 ~/aws-sqlserver$ ./apply.sh
 NOTE: Validating that required commands are found in your PATH.
 NOTE: aws is found in the current PATH.
-NOTE: sqlcmd is found in the current PATH.
 NOTE: terraform is found in the current PATH.
 NOTE: jq is found in the current PATH.
 NOTE: All required commands are available.
