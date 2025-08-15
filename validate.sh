@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set your region if needed
-AWS_REGION="us-east-2"
+AWS_DEFAULT_REGION="us-east-2"
 
 ADMINER_FQDN=$(aws ec2 describe-instances \
   --region us-east-2 \
