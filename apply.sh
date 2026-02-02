@@ -12,6 +12,13 @@
 #   4) Validates the deployment and performs post-build checks
 # ===============================================================================
 
+# Enable strict shell behavior:
+#   -e  Exit immediately on error
+#   -u  Treat unset variables as errors
+#   -o pipefail  Fail pipelines if any command fails
+set -euo pipefail
+
+
 # ===============================================================================
 # STEP 0: ENVIRONMENT VALIDATION
 # ===============================================================================
