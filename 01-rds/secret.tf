@@ -11,7 +11,7 @@ resource "random_password" "sqlserver_password" {
   # PASSWORD GENERATION
   # -----------------------------------------------------------------------------
   # Length of the generated password in characters
-  length  = 24
+  length = 24
 
   # Exclude special characters for engine and client compatibility
   special = false
@@ -56,6 +56,6 @@ resource "aws_secretsmanager_secret_version" "sqlserver_credentials_version" {
   secret_string = jsonencode({
     user     = "sqladmin"
     password = random_password.sqlserver_password.result
-    endpoint        = split(":", aws_db_instance.sqlserver_rds.endpoint)[0]
+    endpoint = split(":", aws_db_instance.sqlserver_rds.endpoint)[0]
   })
 }

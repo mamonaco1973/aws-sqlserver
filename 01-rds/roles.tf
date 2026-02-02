@@ -39,7 +39,7 @@ resource "aws_iam_role" "ec2_ssm_role" {
 resource "aws_iam_role_policy_attachment" "attach_ssm_policy" {
 
   # IAM role receiving the Systems Manager permissions
-  role       = aws_iam_role.ec2_ssm_role.name
+  role = aws_iam_role.ec2_ssm_role.name
 
   # AWS-managed policy enabling SSM core functionality
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"

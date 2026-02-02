@@ -11,10 +11,10 @@ resource "aws_vpc" "rds-vpc" {
   # VPC CONFIGURATION
   # -----------------------------------------------------------------------------
   # IPv4 CIDR block allocated to the VPC address space
-  cidr_block           = "10.0.0.0/24"
+  cidr_block = "10.0.0.0/24"
 
   # Enable internal DNS resolution within the VPC
-  enable_dns_support   = true
+  enable_dns_support = true
 
   # Enable DNS hostnames for instances launched in the VPC
   enable_dns_hostnames = true
@@ -68,13 +68,13 @@ resource "aws_route" "default_route" {
   # DEFAULT INTERNET ROUTE
   # -----------------------------------------------------------------------------
   # Route table receiving the default route
-  route_table_id         = aws_route_table.public.id
+  route_table_id = aws_route_table.public.id
 
   # Catch-all destination for all IPv4 traffic
   destination_cidr_block = "0.0.0.0/0"
 
   # Forward traffic to the internet gateway
-  gateway_id             = aws_internet_gateway.rds-igw.id
+  gateway_id = aws_internet_gateway.rds-igw.id
 }
 
 # ===============================================================================
@@ -89,16 +89,16 @@ resource "aws_subnet" "rds-subnet-1" {
   # SUBNET PLACEMENT
   # -----------------------------------------------------------------------------
   # Parent VPC for the subnet
-  vpc_id                  = aws_vpc.rds-vpc.id
+  vpc_id = aws_vpc.rds-vpc.id
 
   # CIDR block assigned to the subnet
-  cidr_block              = "10.0.0.0/26"
+  cidr_block = "10.0.0.0/26"
 
   # Assign public IPv4 addresses on instance launch
   map_public_ip_on_launch = true
 
   # Availability zone placement
-  availability_zone       = "us-east-2a"
+  availability_zone = "us-east-2a"
 
   tags = {
     Name = "rds-subnet-1"
@@ -117,7 +117,7 @@ resource "aws_route_table_association" "public_rta_1" {
   # PUBLIC SUBNET ASSOCIATION
   # -----------------------------------------------------------------------------
   # Subnet to associate with the public route table
-  subnet_id      = aws_subnet.rds-subnet-1.id
+  subnet_id = aws_subnet.rds-subnet-1.id
 
   # Route table providing internet egress
   route_table_id = aws_route_table.public.id
@@ -150,7 +150,7 @@ resource "aws_nat_gateway" "rds-nat" {
   allocation_id = aws_eip.nat_eip.id
 
   # Place the NAT gateway in a public subnet
-  subnet_id     = aws_subnet.rds-subnet-1.id
+  subnet_id = aws_subnet.rds-subnet-1.id
 
   tags = {
     Name = "rds-nat-gateway"
@@ -169,10 +169,10 @@ resource "aws_subnet" "private-subnet-1" {
   # SUBNET PLACEMENT
   # -----------------------------------------------------------------------------
   # Parent VPC for the subnet
-  vpc_id            = aws_vpc.rds-vpc.id
+  vpc_id = aws_vpc.rds-vpc.id
 
   # CIDR block assigned to the private subnet
-  cidr_block        = "10.0.0.64/26"
+  cidr_block = "10.0.0.64/26"
 
   # Availability zone placement
   availability_zone = "us-east-2a"
@@ -188,10 +188,10 @@ resource "aws_subnet" "private-subnet-2" {
   # SUBNET PLACEMENT
   # -----------------------------------------------------------------------------
   # Parent VPC for the subnet
-  vpc_id            = aws_vpc.rds-vpc.id
+  vpc_id = aws_vpc.rds-vpc.id
 
   # CIDR block assigned to the private subnet
-  cidr_block        = "10.0.0.128/26"
+  cidr_block = "10.0.0.128/26"
 
   # Availability zone placement
   availability_zone = "us-east-2b"
@@ -226,13 +226,13 @@ resource "aws_route" "private_default_route" {
   # DEFAULT NAT ROUTE
   # -----------------------------------------------------------------------------
   # Route table receiving the default route
-  route_table_id         = aws_route_table.private.id
+  route_table_id = aws_route_table.private.id
 
   # Catch-all destination for all IPv4 traffic
   destination_cidr_block = "0.0.0.0/0"
 
   # Forward traffic to the NAT gateway
-  nat_gateway_id         = aws_nat_gateway.rds-nat.id
+  nat_gateway_id = aws_nat_gateway.rds-nat.id
 }
 
 # ===============================================================================
@@ -247,7 +247,7 @@ resource "aws_route_table_association" "private_rta_1" {
   # PRIVATE SUBNET ASSOCIATION
   # -----------------------------------------------------------------------------
   # Private subnet to associate with the private route table
-  subnet_id      = aws_subnet.private-subnet-1.id
+  subnet_id = aws_subnet.private-subnet-1.id
 
   # Route table providing NAT egress
   route_table_id = aws_route_table.private.id
@@ -259,7 +259,7 @@ resource "aws_route_table_association" "private_rta_2" {
   # PRIVATE SUBNET ASSOCIATION
   # -----------------------------------------------------------------------------
   # Private subnet to associate with the private route table
-  subnet_id      = aws_subnet.private-subnet-2.id
+  subnet_id = aws_subnet.private-subnet-2.id
 
   # Route table providing NAT egress
   route_table_id = aws_route_table.private.id
