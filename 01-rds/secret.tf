@@ -1,28 +1,61 @@
-##################################################
-# SECURELY GENERATE AND STORE CREDENTIALS FOR RDS
-##################################################
+# ===============================================================================
+# SECURE CREDENTIAL GENERATION AND STORAGE FOR RDS
+# ===============================================================================
+# Generates a secure random password and stores database credentials
+# in AWS Secrets Manager for use by dependent resources.
+# ===============================================================================
 
-# Generate a secure random alphanumeric password
 resource "random_password" "sqlserver_password" {
-  length  = 24    # Total password length: 24 characters
-  special = false # Exclude special characters (alphanumeric only for compatibility)
+
+  # -----------------------------------------------------------------------------
+  # PASSWORD GENERATION
+  # -----------------------------------------------------------------------------
+  # Length of the generated password in characters
+  length  = 24
+
+  # Exclude special characters for engine and client compatibility
+  special = false
 }
 
-# Define a new Secrets Manager secret to store RDS credentials
+# ===============================================================================
+# SECRETS MANAGER SECRET DEFINITION
+# ===============================================================================
+# Defines a Secrets Manager secret used to store SQL Server credentials.
+# ===============================================================================
+
 resource "aws_secretsmanager_secret" "sqlserver_credentials" {
-  name                    = "sqlserver-credentials" # Logical name for the secret in AWS Secrets Manager
+
+  # -----------------------------------------------------------------------------
+  # SECRET METADATA
+  # -----------------------------------------------------------------------------
+  # Logical name of the secret in AWS Secrets Manager
+  name = "sqlserver-credentials"
+
+  # Disable recovery window to allow immediate deletion on destroy
   recovery_window_in_days = 0
 }
 
-# Store the actual credential values in the secret (versioned)
-resource "aws_secretsmanager_secret_version" "sqlserver_credentials_version" {
-  secret_id = aws_secretsmanager_secret.sqlserver_credentials.id # Reference the previously created secret
+# ===============================================================================
+# SECRETS MANAGER SECRET VERSION
+# ===============================================================================
+# Stores the actual credential values as a versioned secret payload.
+# ===============================================================================
 
-  # Encode credentials as a JSON string and store as the secret value
+resource "aws_secretsmanager_secret_version" "sqlserver_credentials_version" {
+
+  # -----------------------------------------------------------------------------
+  # SECRET ASSOCIATION
+  # -----------------------------------------------------------------------------
+  # Reference the previously created Secrets Manager secret
+  secret_id = aws_secretsmanager_secret.sqlserver_credentials.id
+
+  # -----------------------------------------------------------------------------
+  # SECRET PAYLOAD
+  # -----------------------------------------------------------------------------
+  # Encode credentials as a JSON document for structured retrieval
   secret_string = jsonencode({
-    user     = "sqladmin"                                # Static username for SQL Server admin
-    password = random_password.sqlserver_password.result # Dynamic, securely generated password
-    #endpoint        = split(":", aws_rds_cluster.sqlserver_cluster.endpoint)[0]
+    user     = "sqladmin"
+    password = random_password.sqlserver_password.result
+    endpoint        = split(":", aws_rds_cluster.sqlserver_cluster.endpoint)[0]
   })
 }
-

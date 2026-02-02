@@ -1,25 +1,39 @@
 #!/bin/bash
+# ===============================================================================
+# FILE: destroy.sh
+# ===============================================================================
+# Tears down all Terraform-managed infrastructure for the SQL Server
+# RDS environment in a controlled and repeatable manner.
+#
+# This script:
+#   1) Sets the AWS default region for CLI and Terraform operations
+#   2) Initializes the Terraform working directory
+#   3) Destroys all provisioned RDS resources without prompting
+# ===============================================================================
 
-############################################
-# SET DEFAULT AWS REGION
-############################################
+# ===============================================================================
+# SET AWS DEFAULT REGION
+# ===============================================================================
+# Define the AWS region used by all subsequent AWS CLI and Terraform
+# commands executed by this script.
+# ===============================================================================
 
-# Export the AWS region to ensure all AWS CLI commands run in the correct context
 export AWS_DEFAULT_REGION="us-east-2"
 
-############################################
-# STEP 1: DESTROY RDS INSTANCES
-############################################
+# ===============================================================================
+# DESTROY RDS INFRASTRUCTURE
+# ===============================================================================
+# Destroy all Terraform-managed resources defined in the RDS module.
+# ===============================================================================
 
-# Navigate into the Terraform directory for EC2 deployment
+# Change into the Terraform configuration directory
 cd 01-rds
 
-# Initialize Terraform backend and provider plugins (safe for destroy)
+# Initialize the Terraform backend and required providers
 terraform init
 
-# Destroy all RDS instances and related resources provisioned by Terraform
-terraform destroy -auto-approve  # Auto-approve skips manual confirmation prompts
+# Destroy all resources without interactive approval
+terraform destroy -auto-approve
 
-# Return to root directory after RDS teardown
+# Return to the root project directory
 cd ..
-

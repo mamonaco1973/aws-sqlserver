@@ -1,70 +1,106 @@
-############################################
+# ===============================================================================
 # SECURITY GROUP: SQL SERVER ACCESS
-############################################
+# ===============================================================================
+# Controls inbound SQL Server access and allows unrestricted outbound
+# traffic for database connectivity and updates.
+# ===============================================================================
 
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-sg" # Name of the security group
-  description = "Security group to allow port 5432 access and open all outbound traffic"
-  vpc_id      = aws_vpc.rds-vpc.id # Associate SG with the rds VPC
 
-  # Ingress Rule — Allow Postgres traffic from anywhere
+  # -----------------------------------------------------------------------------
+  # SECURITY GROUP METADATA
+  # -----------------------------------------------------------------------------
+  # Name assigned to the security group
+  name = "rds-sg"
+
+  # Description of the security group purpose
+  description = "Allow SQL Server inbound access and all outbound traffic"
+
+  # Associate the security group with the RDS VPC
+  vpc_id = aws_vpc.rds-vpc.id
+
+  # -----------------------------------------------------------------------------
+  # INBOUND RULES
+  # -----------------------------------------------------------------------------
+  # Allow inbound SQL Server traffic on port 1433
   ingress {
-    from_port   = 1433          # Starting port — SQL Server
-    to_port     = 1433          # Ending port — SQL Server
-    protocol    = "tcp"         # TCP protocol required for SQL Server
-    cidr_blocks = ["0.0.0.0/0"] # ⚠️ Open to all IPv4 addresses — not secure for production
+    from_port   = 1433
+    to_port     = 1433
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Egress Rule — Allow all outbound traffic
+  # -----------------------------------------------------------------------------
+  # OUTBOUND RULES
+  # -----------------------------------------------------------------------------
+  # Allow all outbound traffic from the security group
   egress {
-    from_port   = 0             # Start of port range (0 = all)
-    to_port     = 0             # End of port range (0 = all)
-    protocol    = "-1"          # -1 = all protocols
-    cidr_blocks = ["0.0.0.0/0"] # ⚠️ Unrestricted outbound access
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "rds-sg" # Name tag for easier lookup
+    Name = "rds-sg"
   }
 }
 
-###########################################
-# SECURITY GROUP: WEB (HTTP/HTTPS) ACCESS
-###########################################
+# ===============================================================================
+# SECURITY GROUP: WEB (HTTP AND HTTPS) ACCESS
+# ===============================================================================
+# Allows inbound web traffic over HTTP and HTTPS and unrestricted
+# outbound access for web-facing resources.
+# ===============================================================================
 
 resource "aws_security_group" "web_sg" {
-  name        = "web-sg" # Name of the security group
-  description = "Allow HTTP (80) and HTTPS (443) inbound; allow all outbound"
-  vpc_id      = aws_vpc.rds-vpc.id # Associate SG with the rds VPC
 
-  # Ingress Rule — Allow HTTP traffic from anywhere
+  # -----------------------------------------------------------------------------
+  # SECURITY GROUP METADATA
+  # -----------------------------------------------------------------------------
+  # Name assigned to the security group
+  name = "web-sg"
+
+  # Description of the security group purpose
+  description = "Allow HTTP and HTTPS inbound access and all outbound traffic"
+
+  # Associate the security group with the RDS VPC
+  vpc_id = aws_vpc.rds-vpc.id
+
+  # -----------------------------------------------------------------------------
+  # INBOUND RULES
+  # -----------------------------------------------------------------------------
+  # Allow inbound HTTP traffic on port 80
   ingress {
-    from_port        = 80            # Starting port — HTTP
-    to_port          = 80            # Ending port — HTTP
-    protocol         = "tcp"         # TCP protocol required for HTTP
-    cidr_blocks      = ["0.0.0.0/0"] # ⚠️ Open to all IPv4 — restrict in production
-    ipv6_cidr_blocks = ["::/0"]      # ⚠️ Open to all IPv6 — restrict in production
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
-  # Ingress Rule — Allow HTTPS traffic from anywhere
+  # Allow inbound HTTPS traffic on port 443
   ingress {
-    from_port        = 443           # Starting port — HTTPS
-    to_port          = 443           # Ending port — HTTPS
-    protocol         = "tcp"         # TCP protocol required for HTTPS
-    cidr_blocks      = ["0.0.0.0/0"] # ⚠️ Open to all IPv4 — restrict in production
-    ipv6_cidr_blocks = ["::/0"]      # ⚠️ Open to all IPv6 — restrict in production
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
-  # Egress Rule — Allow all outbound traffic
+  # -----------------------------------------------------------------------------
+  # OUTBOUND RULES
+  # -----------------------------------------------------------------------------
+  # Allow all outbound traffic from the security group
   egress {
-    from_port        = 0             # Start of port range (0 = all)
-    to_port          = 0             # End of port range (0 = all)
-    protocol         = "-1"          # -1 = all protocols
-    cidr_blocks      = ["0.0.0.0/0"] # Unrestricted outbound access
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
 
   tags = {
-    Name = "web-sg" # Name tag for easier lookup
+    Name = "web-sg"
   }
 }

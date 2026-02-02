@@ -1,29 +1,62 @@
-# Define an IAM Role for EC2 instances to interact with AWS Systems Manager (SSM)
-resource "aws_iam_role" "ec2_ssm_role" {
-  name = "EC2SSMRole"
+# ===============================================================================
+# IAM ROLE FOR EC2 SYSTEMS MANAGER (SSM) ACCESS
+# ===============================================================================
+# Defines an IAM role that allows EC2 instances to register with and be
+# managed by AWS Systems Manager.
+# ===============================================================================
 
-  # Define the trust policy allowing EC2 instances to assume this role
+resource "aws_iam_role" "ec2_ssm_role" {
+
+  # -----------------------------------------------------------------------------
+  # ROLE IDENTIFICATION
+  # -----------------------------------------------------------------------------
+  # Friendly name for the EC2 Systems Manager IAM role
+  name = "EC2SSMRole-Adminer"
+
+  # -----------------------------------------------------------------------------
+  # TRUST POLICY
+  # -----------------------------------------------------------------------------
+  # Allow EC2 instances to assume this role via the STS service
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Service = "ec2.amazonaws.com" # Only EC2 instances can assume this role
+        Service = "ec2.amazonaws.com"
       }
-      Action = "sts:AssumeRole" # Allows EC2 instances to request temporary credentials
+      Action = "sts:AssumeRole"
     }]
   })
 }
 
-# Attach the AmazonSSMManagedInstanceCore policy to the SSM role
-# This ensures instances using the SSM role can be managed via AWS Systems Manager
+# ===============================================================================
+# SSM MANAGED POLICY ATTACHMENT
+# ===============================================================================
+# Attaches the AWS-managed policy required for Systems Manager
+# functionality on EC2 instances.
+# ===============================================================================
+
 resource "aws_iam_role_policy_attachment" "attach_ssm_policy" {
+
+  # IAM role receiving the Systems Manager permissions
   role       = aws_iam_role.ec2_ssm_role.name
+
+  # AWS-managed policy enabling SSM core functionality
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# Create an IAM Instance Profile for EC2 instances using the SSM role
+# ===============================================================================
+# IAM INSTANCE PROFILE FOR EC2
+# ===============================================================================
+# Creates an instance profile allowing EC2 instances to use the
+# Systems Manager IAM role.
+# ===============================================================================
+
 resource "aws_iam_instance_profile" "ec2_ssm_profile" {
-  name = "EC2SSMProfile"
-  role = aws_iam_role.ec2_ssm_role.name # Associate the EC2SSMRole with this profile
+
+  # Name of the EC2 instance profile
+  name = "EC2SSMProfile-Adminer"
+
+  # Associate the SSM IAM role with this instance profile
+  role = aws_iam_role.ec2_ssm_role.name
 }
